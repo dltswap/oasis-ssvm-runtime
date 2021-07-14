@@ -357,7 +357,7 @@ impl Eth for EthClient {
                 .and_then(
                     move |blk| -> Box<dyn Future<Item = _, Error = Error> + Send> {
                         match blk {
-                            Some(blk) => Box::new(blk.rich_block(include_txs).map(Some)),
+                            Some(blk) => Box::new(extract_invalid_tx_from_block(blk.rich_block(include_txs).map(Some))),
                             None => Box::new(future::ok(None)),
                         }
                     },
@@ -383,13 +383,23 @@ impl Eth for EthClient {
                 .and_then(
                     move |blk| -> Box<dyn Future<Item = _, Error = Error> + Send> {
                         match blk {
-                            Some(blk) => Box::new(blk.rich_block(include_txs).map(Some)),
+                            Some(blk) => Box::new(extract_invalid_tx_from_block(blk.rich_block(include_txs).map(Some))),
                             None => Box::new(future::ok(None)),
                         }
                     },
                 )
                 .map_err(jsonrpc_error),
         )
+    }
+
+    fn extract_invalid_tx_from_block(&self, richBlock: &RichBlock) -> RichBlock {
+        let mut newRichBlock = richBlock.clone();
+        newRichBlock.inner.transactions = richBlock.inner.transactions.into_iter()
+            .filter(|t| None != transaction_by_hash(self, match t {
+                H256 => t,
+                Transaction => t.hash
+            })).collect();
+        newRichBlock;
     }
 
     fn transaction_by_hash(&self, hash: RpcH256) -> BoxFuture<Option<RpcTransaction>> {
