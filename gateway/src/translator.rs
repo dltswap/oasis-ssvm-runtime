@@ -659,14 +659,17 @@ impl EthereumBlock {
                 let raw: ByteBuf = cbor::from_value(txn.args).ok()?;
                 let signed: UnverifiedTransaction = rlp::decode(&raw).ok()?;
                 let hash: H256 = signed.hash().into();
-                match get_txn_by_hash(hash).wait().ok() {
-                    None => {
-                        error!(logger, "Error while get transaction by hash";
-                                    "hash" => ?hash,
-                                );
+                let eth_tx = get_txn_by_hash(hash).wait().ok()??;
+                let tx = eth_tx.transaction();
+                match tx {
+                    Err(err) => {
+                        error!(logger, "Error while get transaction by hash"; "hash" => ?hash);
                         None
                     },
-                    Some(_) => Some(signed),
+                    Ok(t) => {
+                        info!(logger, "success get transaction by hash in block"; "hash" => ?hash);
+                        Some(signed)
+                    },
                 }
             }))
         })
