@@ -24,11 +24,11 @@ oasis-core-keymanager-client = { git = "https://github.com/oasisprotocol/oasis-c
 oasis-core-runtime = { git = "https://github.com/oasisprotocol/oasis-core", tag = "v21.1.2" }
 
 # Parity.
-common-types = { git = "https://github.com/second-state/oasis-parity", branch = "ssvm" }
-ethcore = { git = "https://github.com/second-state/oasis-parity", branch = "ssvm" }
-ethkey = { git = "https://github.com/second-state/oasis-parity", branch = "ssvm" }
-hashdb = { git = "https://github.com/second-state/oasis-parity", branch = "ssvm" }
-keccak-hash = { git = "https://github.com/second-state/oasis-parity", branch = "ssvm" }
+common-types = { git = "https://github.com/dltswap/oasis-parity", branch = "ssvm" }
+ethcore = { git = "https://github.com/dltswap/oasis-parity", branch = "ssvm" }
+ethkey = { git = "https://github.com/dltswap/oasis-parity", branch = "ssvm" }
+hashdb = { git = "https://github.com/dltswap/oasis-parity", branch = "ssvm" }
+keccak-hash = { git = "https://github.com/dltswap/oasis-parity", branch = "ssvm" }
 ethereum-types = { version = "0.3", default-features = false, features = ["std", "serialize"] }
 
 # Others.
