@@ -43,7 +43,6 @@ use parity_rpc::v1::types::{
 use serde_bytes::ByteBuf;
 use slog::{error, info, Logger};
 use tokio_threadpool::{Builder as ThreadPoolBuilder, ThreadPool};
-
 use crate::EthereumRuntimeClient;
 
 /// Translator that enables exposing the Eth/WASI runtime on Oasis Core as an
@@ -644,12 +643,31 @@ impl EthereumBlock {
     pub fn transactions(
         &self,
     ) -> impl Future<Item = impl Iterator<Item = UnverifiedTransaction>, Error = Error> {
-        self.raw_transactions().and_then(|txns| {
-            Ok(txns.filter_map(|txn| {
+        let client = Arc::new(self.client.clone());
+        let logger = get_logger("gateway/translator");
+        let get_txn_by_hash = move |hash| -> Box<dyn Future<Item = Option<EthereumTransaction>, Error = Error>> {
+            Box::new(
+                client
+                    .txn_client()
+                    .query_tx(TAG_ETH_TX_HASH, hash)
+                    .map(|txn| txn.map(EthereumTransaction::new))
+            )
+        };
+
+        self.raw_transactions().and_then(move |txns| {
+            Ok(txns.filter_map(move |txn| {
                 let raw: ByteBuf = cbor::from_value(txn.args).ok()?;
                 let signed: UnverifiedTransaction = rlp::decode(&raw).ok()?;
-
-                Some(signed)
+                let hash: H256 = signed.hash().into();
+                match get_txn_by_hash(hash).wait().ok() {
+                    None => {
+                        error!(logger, "Error while get transaction by hash";
+                                    "hash" => ?hash,
+                                );
+                        None
+                    },
+                    Some(_) => Some(signed),
+                }
             }))
         })
     }
