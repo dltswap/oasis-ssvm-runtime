@@ -415,14 +415,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "bloomchain"
-version = "0.2.0"
-source = "git+https://github.com/dltswap/oasis-parity?branch=ssvm#e88a5bdfec560fba65317a5bf31cc488d25d20ac"
-dependencies = [
- "ethbloom 0.5.3",
-]
-
-[[package]]
 name = "bn"
 version = "0.4.4"
 source = "git+https://github.com/paritytech/bn#51eea1334c5e7278696c6ac6d8c8fecde39397ff"
