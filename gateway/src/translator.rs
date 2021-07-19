@@ -83,7 +83,7 @@ impl Translator {
             BlockId::Hash(hash) => Box::new(self.get_block_by_hash(hash)),
             BlockId::Number(round) => Box::new(self.get_block_by_round(round)),
             BlockId::Latest => Box::new(self.get_latest_block().map(Some)),
-            BlockId::Earliest => Box::new(self.get_block_by_round(0)),
+            BlockId::Earliest => Box::new(self.get_block_by_round(45600)),
         };
 
         block
@@ -188,7 +188,7 @@ impl Translator {
             BlockId::Hash(hash) => Box::new(self.get_txn_by_block_hash_and_index(hash, index)),
             BlockId::Number(round) => Box::new(self.get_txn_by_round_and_index(round, index)),
             BlockId::Latest => Box::new(self.get_txn_by_round_and_index(ROUND_LATEST, index)),
-            BlockId::Earliest => Box::new(self.get_txn_by_round_and_index(0, index)),
+            BlockId::Earliest => Box::new(self.get_txn_by_round_and_index(45600, index)),
         };
 
         txn
