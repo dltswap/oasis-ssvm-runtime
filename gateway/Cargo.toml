@@ -19,7 +19,7 @@ lazy_static = "1.3.0"
 log = "0.4"
 mem = { git = "https://github.com/dltswap/oasis-parity", branch = "ssvm" }
 parity-reactor = { git = "https://github.com/dltswap/oasis-parity", branch = "ssvm" }
-parity-rpc = { git = "https://github.com/dltswap/oasis-parity", branch = "ssvm#390b2df" }
+parity-rpc = { git = "https://github.com/dltswap/oasis-parity", branch = "ssvm" }
 parking_lot = "0.5"
 prometheus = { version = "0.8", features = ["push"] }
 rlp = { git = "https://github.com/dltswap/oasis-parity", branch = "ssvm" }
