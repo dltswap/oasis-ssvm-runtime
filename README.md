@@ -114,3 +114,9 @@ contract.balanceOf(0xB8b3666d8fEa887D97Ab54f571B8E5020c5c8b58) = 1
 ## Our testing node
 
 We've deployed a testing node to demo our runtime at http://oasis-ssvm-demo.secondstate.io:8545/.
+
+## start gateway
+nohup ./gateway --interface 0.0.0.0 \
+  --node-address unix:/oasis/mainnet/node/internal.sock \
+  --runtime-id 000000000000000000000000000000000000000000000000000000000000ff04 \
+  --jsonrpc-max-batch 500 2>&1 &
