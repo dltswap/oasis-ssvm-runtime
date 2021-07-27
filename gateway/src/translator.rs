@@ -654,6 +654,7 @@ impl EthereumBlock {
             )
         };
 
+        let block_hash = self.hash().clone();
         self.raw_transactions().and_then(move |txns| {
             Ok(txns.filter_map(move |txn| {
                 let raw: ByteBuf = cbor::from_value(txn.args).ok()?;
@@ -667,8 +668,15 @@ impl EthereumBlock {
                         None
                     },
                     Ok(t) => {
-                        info!(logger, "success get transaction by hash in block"; "hash" => ?hash);
-                        Some(signed)
+                        if t.block_hash != block_hash {
+                            error!(logger, "Block hash is mismatch while get transaction by hash";
+                             "input block hash" => ?block_hash, "transaction block hash" => ?t.block_hash);
+                            None
+                        }
+                        else {
+                            info!(logger, "success get transaction by hash in block"; "hash" => ?hash);
+                            Some(signed)
+                        }
                     },
                 }
             }))
