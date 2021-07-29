@@ -775,7 +775,7 @@ impl EthereumBlock {
                     logs_bloom: Some(rich_header.logs_bloom.clone()),
                     timestamp: rich_header.timestamp,
                     difficulty: rich_header.difficulty,
-                    total_difficulty: None,
+                    total_difficulty: Some(Default::default()),
                     seal_fields: rich_header.seal_fields.clone(),
                     uncles: vec![],
                     transactions,
